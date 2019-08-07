@@ -6,16 +6,15 @@ import { EtherscanBuidlerEnvironment } from "../index";
 export default class EtherscanVerifyContractRequest {
   // for that weird etherscan library props
   [key: string]: any;
-  public readonly apikey: string;
   public readonly module: string = "contract";
-  public readonly action: string = "verifysourcecode";
-  public readonly contractaddress: string;
-  public readonly sourceCode: string;
-  public readonly contractname: string;
-  public readonly compilerversion: string;
-  public readonly optimizationUsed: number;
-  public readonly runs: number;
-  public readonly constructorArguements: string;
+  public readonly action: string = "verify";
+  public readonly addressHash: string;
+  public readonly contractSourceCode: string;
+  public readonly name: string;
+  public readonly compilerVersion: string;
+  public readonly optimization: number;
+  public readonly optimizationRuns: number;
+  public readonly constructorArguments: string;
 
   constructor(
     etherscanConfig: EtherscanBuidlerEnvironment,
@@ -26,14 +25,13 @@ export default class EtherscanVerifyContractRequest {
     source: string,
     constructorArguments: string
   ) {
-    this.apikey = etherscanConfig.apiKey;
-    this.contractaddress = address;
-    this.sourceCode = source;
-    this.contractname = contractName;
-    this.compilerversion = solcConfig.fullVersion;
-    this.optimizationUsed = solcConfig.optimizer.enabled ? 1 : 0;
-    this.runs = solcConfig.optimizer.runs;
-    this.constructorArguements = constructorArguments;
+    this.addressHash = address;
+    this.contractSourceCode = source;
+    this.name = contractName;
+    this.compilerVersion = solcConfig.fullVersion;
+    this.optimization = solcConfig.optimizer.enabled;
+    this.optimizationRuns = solcConfig.optimizer.runs;
+    this.constructorArguments = constructorArguments;
     this.setLibraries(libraries);
   }
 
@@ -55,8 +53,8 @@ export default class EtherscanVerifyContractRequest {
     }
     for (const libraryName in parsedLibraries) {
       if (parsedLibraries.hasOwnProperty(libraryName)) {
-        this["libraryname" + i] = libraryName;
-        this["libraryaddress" + i] = parsedLibraries[libraryName];
+        this[`library${i}Name`] = libraryName;
+        this[`library${i}Address`] = parsedLibraries[libraryName];
         i++;
         if (i >= 10) {
           break;
